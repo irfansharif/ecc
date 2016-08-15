@@ -8,3 +8,5 @@
 /spec/reports/
 /tmp/
 Makefile
+ecc.so
+mkmf.log
