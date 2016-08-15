@@ -31,18 +31,18 @@ message = Random.new.bytes(10)
 
 # generate private key
 private_key = Random.new.bytes(10) 
-until ECC::SEPC256K1.private_key_verify(private_key) do
+until ECC::SECP256K1.private_key_verify(private_key) do
   private_key = Random.new.bytes(10) 
 end
 
 # get the public key in a compressed format
-public_key = ECC::SEPC256K1.public_key_create(private_key)
+public_key = ECC::SECP256K1.public_key_create(private_key)
 
 # sign the message
-signed_object = ECC::SEPC256K1.sign(message, private_key)
+signed_object = ECC::SECP256K1.sign(message, private_key)
 
 # verify the signature
-puts "Verification: #{ECC::SEPC256K1.verify(message, signed_object.signature, public_key)}"
+puts "Verification: #{ECC::SECP256K1.verify(message, signed_object.signature, public_key)}"
 ```
 
 ## Development

@@ -5,7 +5,7 @@ require 'ecc/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "ecc"
-  spec.version       = Ecc::VERSION
+  spec.version       = ECC::VERSION
   spec.authors       = ["Irfan Sharif"]
   spec.email         = ["irfanmahmoudsharif@gmail.com"]
 
