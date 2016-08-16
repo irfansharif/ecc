@@ -1,7 +1,7 @@
 #include "ecc.h"
 
 void Init_ecc() {
-  VALUE ecc = rb_define_module("ECC");
+  VALUE ecc  = rb_define_module("ECC");
   VALUE secp = rb_define_module_under(ecc, "SECP256K1");
 
   rb_define_singleton_method(secp, "private_key_verify", private_key_verify, 1);
@@ -18,4 +18,7 @@ void Init_ecc() {
   rb_define_singleton_method(secp, "verify", verify, 3);
   rb_define_singleton_method(secp, "recover", recover, -1);
   rb_define_singleton_method(secp, "ecdh", ecdh, 2);
+
+  secp_ctx = secp256k1_context_create(
+    SECP256K1_CONTEXT_SIGN | SECP256K1_CONTEXT_VERIFY);
 }
