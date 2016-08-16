@@ -9,7 +9,6 @@ class ECCTest < Minitest::Test
     assert ECC::SECP256K1.methods.include? :private_key_verify
     assert ECC::SECP256K1.methods.include? :private_key_tweak_add
     assert ECC::SECP256K1.methods.include? :private_key_tweak_multiply
-
   end
 
   def test_public_key_api_coverage
