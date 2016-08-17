@@ -1,12 +1,61 @@
 #include <ruby.h>
 #include "public_key.h"
+#include <unistd.h>
 
 VALUE public_key_create(int argc, VALUE* argv, VALUE self) {
-  return Qfalse;
+  // TODO(irfansharif): don't rebuild context each time, sign and ctx
+  VALUE private_key, compressed;
+  rb_scan_args(argc, argv, "11", &private_key, &compressed);
+
+  if (RSTRING_LEN(private_key) != 32)
+    rb_raise(rb_eRuntimeError, "Private key length is invalid");
+  const unsigned char* private_key_buffer = StringValuePtr(private_key);
+
+  if (TYPE(compressed) != T_FALSE)
+    compressed = Qtrue;
+  unsigned int flags = compressed == Qtrue ? SECP256K1_EC_COMPRESSED : SECP256K1_EC_UNCOMPRESSED;
+
+  secp256k1_pubkey public_key;
+  secp256k1_context *sign = secp256k1_context_create(SECP256K1_CONTEXT_SIGN);
+  secp256k1_context *ctx = secp256k1_context_create(SECP256K1_CONTEXT_SIGN | SECP256K1_CONTEXT_VERIFY);
+
+  if(secp256k1_ec_pubkey_create(sign, &public_key, private_key_buffer) == 0)
+    rb_raise(rb_eRuntimeError, "Private key was invalid, try again");
+
+  unsigned char output[65];
+  size_t output_length = 65;
+  secp256k1_ec_pubkey_serialize(ctx, output, &output_length, &public_key, flags);
+
+  return rb_str_new(output, output_length);
 }
 
 VALUE public_key_convert(int argc, VALUE* argv, VALUE self) {
-  return Qfalse;
+  // TODO(irfansharif): don't rebuild context each time, sign and ctx
+  VALUE public_key, compressed;
+  rb_scan_args(argc, argv, "11", &public_key, &compressed);
+
+  size_t public_key_length = RSTRING_LEN(public_key);
+  if (public_key_length != 33 && public_key_length != 65)
+    rb_raise(rb_eRuntimeError, "Public key length is invalid");
+  const unsigned char* public_key_buffer = StringValuePtr(public_key);
+
+  if (TYPE(compressed) != T_FALSE)
+    compressed = Qtrue;
+  unsigned int flags = compressed == Qtrue ? SECP256K1_EC_COMPRESSED : SECP256K1_EC_UNCOMPRESSED;
+
+  secp256k1_pubkey converted_public_key;
+  secp256k1_context *sign = secp256k1_context_create(SECP256K1_CONTEXT_SIGN);
+  secp256k1_context *ctx = secp256k1_context_create(SECP256K1_CONTEXT_SIGN | SECP256K1_CONTEXT_VERIFY);
+
+  if (secp256k1_ec_pubkey_parse(sign, &converted_public_key, public_key_buffer, public_key_length) == 0)
+    rb_raise(rb_eRuntimeError, "The public key could not be parsed or is invalid");
+
+  unsigned char output[65];
+  size_t output_length = 65;
+  secp256k1_ec_pubkey_serialize(ctx, output, &output_length, &public_key, flags);
+  secp256k1_ec_pubkey_serialize(ctx, output, &output_length, &converted_public_key, flags);
+
+  return rb_str_new(output, output_length);
 }
 
 VALUE public_key_verify(VALUE public_key) {

@@ -25,8 +25,8 @@ end
 unless have_library('secp256k1') && append_library($libs, 'secp256k1')
   abort "Unable to append library secp256k1!"
 end
-
 $CFLAGS << ' -std=c99'
+$CFLAGS << ' -g'
 
 dir_config('secp256k1', HEADER_DIRS, LIB_DIRS)
 

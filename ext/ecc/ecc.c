@@ -19,6 +19,5 @@ void Init_ecc() {
   rb_define_singleton_method(secp, "recover", recover, -1);
   rb_define_singleton_method(secp, "ecdh", ecdh, 2);
 
-  secp_ctx = secp256k1_context_create(
-    SECP256K1_CONTEXT_SIGN | SECP256K1_CONTEXT_VERIFY);
+  secp_ctx = secp256k1_context_create(SECP256K1_CONTEXT_SIGN | SECP256K1_CONTEXT_VERIFY);
 }
