@@ -10,8 +10,8 @@ void Init_ecc() {
   rb_define_singleton_method(secp, "public_key_create", public_key_create, -1);
   rb_define_singleton_method(secp, "public_key_convert", public_key_convert, -1);
   rb_define_singleton_method(secp, "public_key_verify", public_key_verify, 1);
-  rb_define_singleton_method(secp, "public_key_tweak_add", public_key_tweak_add, 2);
-  rb_define_singleton_method(secp, "public_key_tweak_multiply", public_key_tweak_multiply, 2);
+  rb_define_singleton_method(secp, "public_key_tweak_add", public_key_tweak_add, -1);
+  rb_define_singleton_method(secp, "public_key_tweak_multiply", public_key_tweak_multiply, -1);
   rb_define_singleton_method(secp, "public_key_combine", public_key_combine, -1);
   rb_define_singleton_method(secp, "signature_normalize", signature_normalize, 1);
   rb_define_singleton_method(secp, "sign", sign, -1);
